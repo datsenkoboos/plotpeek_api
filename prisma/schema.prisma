@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Token {
+  id           Int    @id @default(autoincrement())
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  ip           String @unique
+  refreshToken String @unique
+}
+
+model User {
+  id             Int     @id @default(autoincrement())
+  username       String  @unique
+  email          String
+  password       String
+  isActivated    Boolean @default(false)
+  activationLink String  @unique
+  tokens         Token[]
+
+  summaries    Summary[]
+  likes    Like[]
+
+  createdAt     DateTime @default(now())
+}
+
+model Summary {
+  id        Int      @id @default(autoincrement())
+  createdBy      User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById    Int
+
+  likes    Like[]
+
+  name String
+  author String
+
+  description String
+  volume Int
+  style String
+
+  content String
+
+  views Int @default(0)
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  summary      Summary     @relation(fields: [summaryId], references: [id], onDelete: Cascade)
+  summaryId    Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, summaryId], name: "likeIdentifier")
+}
