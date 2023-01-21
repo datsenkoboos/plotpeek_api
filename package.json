@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "lint": "eslint --fix .",
     "test:build": "npm run build:test && npm run format && cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --silent",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --silent"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

@@ -132,7 +132,6 @@ it("providing valid data, should return 200 and register new user with isActivat
       username: "randomusername",
       password: "Password1234",
     })
-    .set("Content-Type", "application/json");
   await expect(res.statusCode).toBe(200);
 
   // number of users should increase by the one that test registered
