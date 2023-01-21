@@ -42,9 +42,9 @@ model Summary {
   name String
   author String
 
-  description String
+  description String?
   volume Int
-  style String
+  style String?
 
   content String
 

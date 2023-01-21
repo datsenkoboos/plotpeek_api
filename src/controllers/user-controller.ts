@@ -2,7 +2,7 @@ import userService from "../services/user-service";
 import ApiError from "../exceptions/api-error";
 import { Request, Response, NextFunction } from "express";
 import PrismaClient from "@prisma/client";
-import summaryService from "services/summary-service";
+import summaryService from "../services/summary-service";
 
 class UserController {
   async register(req: Request, res: Response, next: NextFunction) {
@@ -95,7 +95,7 @@ class UserController {
     try {
       const userId = req.user!.id;
       const summaries = await summaryService.getLikedSummaries(userId, req.query.viewed ? +req.query.viewed : 0);
-      return res.json(summaries)
+      return res.json(summaries);
     } catch (error) {
       next(error);
     }

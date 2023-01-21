@@ -7,7 +7,7 @@ import { Summary } from "prisma-selects/summary-select";
 import { SummaryIndividual } from "prisma-selects/summary-individual-select";
 
 class summaryController {
-  // find many beats
+  // find many summarys
   async getSummaries(req: Request, res: Response, next: NextFunction) {
     try {
       let summaries: Summary[];
@@ -63,7 +63,7 @@ class summaryController {
         description,
         volume: +volume,
         style,
-        content: 'New Summary',
+        content: "New Summary",
         createdBy: {
           connect: { id: userId },
         },

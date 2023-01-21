@@ -16,7 +16,7 @@ beforeAll(async () => {
       },
     ],
   });
-  const beat = await prisma.beat.create({
+  const summary = await prisma.summary.create({
     data: {
       name: "outtahere",
       user: {
@@ -30,25 +30,25 @@ beforeAll(async () => {
       image: "image/",
     },
   });
-  id = beat.id;
+  id = summary.id;
 });
 
 afterAll(async () => {
   await prisma.user.deleteMany();
-  await prisma.beat.deleteMany();
+  await prisma.summary.deleteMany();
   await prisma.like.deleteMany();
   await prisma.$disconnect();
 });
 
 it("GET request should return 404", async () => {
-  const res = await request(app).get(`/api/beat/${id}/like`);
+  const res = await request(app).get(`/api/summary/${id}/like`);
   await expect(res.statusCode).toBe(404);
 });
 it("unauthorized request should return 401", async () => {
-  const res = await request(app).put(`/api/beat/${id}/like`);
+  const res = await request(app).put(`/api/summary/${id}/like`);
   await expect(res.statusCode).toBe(401);
 });
-it("request to not existing beat should return 404", async () => {
+it("request to not existing summary should return 404", async () => {
   const login = await request(app).post("/api/login").send({
     username: "s1kebeats",
     password: "Password1234",
@@ -65,11 +65,11 @@ it("valid request, should return 200 and add the like", async () => {
   });
   const accessToken = login.body.accessToken;
 
-  const res = await request(app).put(`/api/beat/${id}/like`).set("Authorization", `Bearer ${accessToken}`);
+  const res = await request(app).put(`/api/summary/${id}/like`).set("Authorization", `Bearer ${accessToken}`);
   await expect(res.statusCode).toBe(200);
 
-  const beat = await request(app).get(`/api/beat/${id}`);
-  await expect(beat.body._count.likes).toBe(1);
+  const summary = await request(app).get(`/api/summary/${id}`);
+  await expect(summary.body._count.likes).toBe(1);
 });
 it("valid request, should return 200 and remove the like", async () => {
   const login = await request(app).post("/api/login").send({
@@ -78,9 +78,9 @@ it("valid request, should return 200 and remove the like", async () => {
   });
   const accessToken = login.body.accessToken;
 
-  const res = await request(app).put(`/api/beat/${id}/like`).set("Authorization", `Bearer ${accessToken}`);
+  const res = await request(app).put(`/api/summary/${id}/like`).set("Authorization", `Bearer ${accessToken}`);
   await expect(res.statusCode).toBe(200);
 
-  const beat = await request(app).get(`/api/beat/${id}`);
-  await expect(beat.body._count.likes).toBe(0);
+  const summary = await request(app).get(`/api/summary/${id}`);
+  await expect(summary.body._count.likes).toBe(0);
 });

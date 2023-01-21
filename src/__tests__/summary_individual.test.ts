@@ -13,7 +13,7 @@ async function checkIndividualAuthorResponse(body: any) {
   await expect(body.related.length).toBe(0);
 }
 
-let beatId: number | null = null;
+let summaryId: number | null = null;
 beforeEach(async () => {
   await prisma.user.create({
     data: {
@@ -26,7 +26,7 @@ beforeEach(async () => {
       isActivated: true,
     },
   });
-  const beat = await prisma.beat.create({
+  const summary = await prisma.summary.create({
     data: {
       name: "outtahere",
       tags: {
@@ -52,35 +52,35 @@ beforeEach(async () => {
       image: "image/",
     },
   });
-  beatId = beat.id;
+  summaryId = summary.id;
 });
 
 afterEach(async () => {
   await prisma.user.deleteMany();
-  await prisma.beat.deleteMany();
+  await prisma.summary.deleteMany();
   await prisma.$disconnect();
 });
 
-it("request to not existing beat, should return 404", async () => {
-  const res = await request(app).get("/api/beat/-1");
+it("request to not existing summary, should return 404", async () => {
+  const res = await request(app).get("/api/summary/-1");
   await expect(res.statusCode).toBe(404);
 });
-it("valid unauthorized request, should return 200 and send individual beat data", async () => {
-  const res = await request(app).get(`/api/beat/${beatId}`);
+it("valid unauthorized request, should return 200 and send individual summary data", async () => {
+  const res = await request(app).get(`/api/summary/${summaryId}`);
   await expect(res.statusCode).toBe(200);
 
   await expect(res.body.comments).toBe(undefined);
   // check response body
   await checkIndividualAuthorResponse(res.body);
 });
-it("valid authorized request, should return 200 and send individual beat data", async () => {
+it("valid authorized request, should return 200 and send individual summary data", async () => {
   const login = await request(app).post("/api/login").send({
     username: "s1kebeats",
     password: "Password1234",
   });
   const accessToken = login.body.accessToken;
 
-  const res = await request(app).get(`/api/beat/${beatId}`).set("Authorization", `Bearer ${accessToken}`);
+  const res = await request(app).get(`/api/summary/${summaryId}`).set("Authorization", `Bearer ${accessToken}`);
   await expect(res.statusCode).toBe(200);
   console.log(res.body);
   await expect(res.body.comments.length).toBe(0);

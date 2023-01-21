@@ -109,5 +109,6 @@
   "bugs": {
     "url": "https://github.com/datsenkoboos/story-summary_api/issues"
   },
-  "homepage": "https://github.com/datsenkoboos/story-summary_api#readme"
+  "homepage": "https://github.com/datsenkoboos/story-summary_api#readme",
+  "type": "module"
 }

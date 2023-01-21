@@ -15,7 +15,7 @@ beforeEach(async () => {
     },
   });
   userId = user.id;
-  await prisma.beat.create({
+  await prisma.summary.create({
     data: {
       name: "Chaze",
       bpm: 140,
@@ -41,7 +41,7 @@ beforeEach(async () => {
       },
     },
   });
-  await prisma.beat.create({
+  await prisma.summary.create({
     data: {
       name: "outtahere",
       bpm: 122,
@@ -71,7 +71,7 @@ beforeEach(async () => {
       },
     },
   });
-  await prisma.beat.create({
+  await prisma.summary.create({
     data: {
       name: "Turnt",
       bpm: 140,
@@ -101,7 +101,7 @@ beforeEach(async () => {
       },
     },
   });
-  await prisma.beat.create({
+  await prisma.summary.create({
     data: {
       name: "PSD",
       bpm: 160,
@@ -135,58 +135,58 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await prisma.user.deleteMany();
-  await prisma.beat.deleteMany();
+  await prisma.summary.deleteMany();
   await prisma.$disconnect();
 });
 
-it("valid request without query, should return 200 and all beats (4)", async () => {
-  const res = await request(app).get("/api/beat/");
+it("valid request without query, should return 200 and all summarys (4)", async () => {
+  const res = await request(app).get("/api/summary/");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(4);
+  await expect(res.body.summarys.length).toBe(4);
 });
-it("valid request with filter by tags: gunna,emotional, should return 200 and beats with the tags (2)", async () => {
-  const res = await request(app).get("/api/beat/?tags=gunna,emotional");
+it("valid request with filter by tags: gunna,emotional, should return 200 and summarys with the tags (2)", async () => {
+  const res = await request(app).get("/api/summary/?tags=gunna,emotional");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(3);
+  await expect(res.body.summarys.length).toBe(3);
 });
-it("valid request with filter by tags: wheezy, should return 200 and beat with 'wheezy' tag (1)", async () => {
-  const res = await request(app).get("/api/beat/?tags=wheezy");
+it("valid request with filter by tags: wheezy, should return 200 and summary with 'wheezy' tag (1)", async () => {
+  const res = await request(app).get("/api/summary/?tags=wheezy");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(1);
-  await expect(res.body.beats[0].name).toBe("outtahere");
+  await expect(res.body.summarys.length).toBe(1);
+  await expect(res.body.summarys[0].name).toBe("outtahere");
 });
-it("valid request with filter by text: s1kebeats, should return 200 and beat with name or author username containing text query (4)", async () => {
-  const res = await request(app).get("/api/beat/?q=s1kebeats");
+it("valid request with filter by text: s1kebeats, should return 200 and summary with name or author username containing text query (4)", async () => {
+  const res = await request(app).get("/api/summary/?q=s1kebeats");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(4);
+  await expect(res.body.summarys.length).toBe(4);
 });
-it("valid request with filter by text: outta, should return 200 and beat with name or author username containing text query (1)", async () => {
-  const res = await request(app).get("/api/beat/?q=outta");
+it("valid request with filter by text: outta, should return 200 and summary with name or author username containing text query (1)", async () => {
+  const res = await request(app).get("/api/summary/?q=outta");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(1);
+  await expect(res.body.summarys.length).toBe(1);
 });
-it("valid request with filter by bpm: 140, should return 200 and beat with bpm = 140 (2)", async () => {
-  const res = await request(app).get("/api/beat/?bpm=140");
+it("valid request with filter by bpm: 140, should return 200 and summary with bpm = 140 (2)", async () => {
+  const res = await request(app).get("/api/summary/?bpm=140");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(2);
-  await expect(res.body.beats[0].name).toBe("Turnt");
-  await expect(res.body.beats[1].name).toBe("Chaze");
+  await expect(res.body.summarys.length).toBe(2);
+  await expect(res.body.summarys[0].name).toBe("Turnt");
+  await expect(res.body.summarys[1].name).toBe("Chaze");
 });
-it("valid request with ordering by wavePriceHigher, should return 200, all beats (4) and sort them by wavePrice higher first", async () => {
-  const res = await request(app).get("/api/beat/?sort=wavePriceHigher");
+it("valid request with ordering by wavePriceHigher, should return 200, all summarys (4) and sort them by wavePrice higher first", async () => {
+  const res = await request(app).get("/api/summary/?sort=wavePriceHigher");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(4);
-  await expect(res.body.beats[0].name).toBe("outtahere");
+  await expect(res.body.summarys.length).toBe(4);
+  await expect(res.body.summarys[0].name).toBe("outtahere");
 });
-it("valid request with ordering by wavePriceLower, should return 200, all beats (4) and sort them by wavePrice lower first", async () => {
-  const res = await request(app).get("/api/beat/?sort=wavePriceLower");
+it("valid request with ordering by wavePriceLower, should return 200, all summarys (4) and sort them by wavePrice lower first", async () => {
+  const res = await request(app).get("/api/summary/?sort=wavePriceLower");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(4);
-  await expect(res.body.beats[0].name).toBe("Chaze");
+  await expect(res.body.summarys.length).toBe(4);
+  await expect(res.body.summarys[0].name).toBe("Chaze");
 });
-it("valid request with filter by both bpm and text, should return 200 and beat with name or author username containing 's1kebeats' and with bpm = 122", async () => {
-  const res = await request(app).get("/api/beat/?q=s1kebeats&bpm=122");
+it("valid request with filter by both bpm and text, should return 200 and summary with name or author username containing 's1kebeats' and with bpm = 122", async () => {
+  const res = await request(app).get("/api/summary/?q=s1kebeats&bpm=122");
   await expect(res.statusCode).toBe(200);
-  await expect(res.body.beats.length).toBe(1);
-  await expect(res.body.beats[0].name).toBe("outtahere");
+  await expect(res.body.summarys.length).toBe(1);
+  await expect(res.body.summarys[0].name).toBe("outtahere");
 });

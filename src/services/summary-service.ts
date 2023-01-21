@@ -1,11 +1,11 @@
 import PrismaClient from "@prisma/client";
-import summaryIndividualSelect, { SummaryIndividual } from "prisma-selects/summary-individual-select";
-import summarySelect, { Summary } from "prisma-selects/summary-select";
+import summaryIndividualSelect, { SummaryIndividual } from "../prisma-selects/summary-individual-select";
+import summarySelect, { Summary } from "../prisma-selects/summary-select";
 import ApiError from "../exceptions/api-error";
 const prisma = new PrismaClient.PrismaClient();
 
 class SummaryService {
-  // get all beats
+  // get all summarys
   async getSummaries(viewed = 0): Promise<Summary[]> {
     const summaries = await prisma.summary.findMany({
       ...summarySelect,
@@ -31,7 +31,7 @@ class SummaryService {
     };
   }
 
-  // find beats with query
+  // find summarys with query
   async findSummaries(
     { name, author, volume, orderBy }: { name: string; author: string; volume: number; orderBy?: string },
     viewed = 0
@@ -108,12 +108,12 @@ class SummaryService {
       where: {
         likes: {
           some: {
-            userId
-          }
-        }
+            userId,
+          },
+        },
       },
-      ...summarySelect
-    })
+      ...summarySelect,
+    });
     return summaries;
   }
 }
