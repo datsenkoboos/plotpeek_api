@@ -1,89 +1,62 @@
-import request from "supertest";
-import prisma from "../client";
-import bcrypt from "bcrypt";
-import app from "./app.js";
+import request from 'supertest'
+import prisma from '../client'
+import bcrypt from 'bcrypt'
+import app from './app.js'
 
-async function checkIndividualAuthorResponse(body: any) {
-  await expect(body.wave).toBe(undefined);
-  await expect(body.wavePrice).toBe(499);
-  await expect(body.name).toBe("outtahere");
-  await expect(body.user.username).toBe("s1kebeats");
-  await expect(body.tags.length).toBe(2);
-  await expect(body.image).toBe("image/");
-  await expect(body.related.length).toBe(0);
+function checkIndividualSummaryResponse (body: any) {
+  expect(body.createdBy.username).toBe('s1kebeats')
+  expect(body.name).toBe('The Witcher')
+  expect(body.author).toBe('Andjey S.')
+  expect(body.content).toBe('The shortest summary')
+  expect(body.description).toBe('Nice')
+  expect(body.style).toBe('Default')
+  expect(body.views).toBe(0)
+  expect(body._count.likes).toBe(0)
 }
 
-let summaryId: number | null = null;
+let summaryId: number | null = null
 beforeEach(async () => {
   await prisma.user.create({
     data: {
-      username: "s1kebeats",
-      displayedName: "Arthur Datsenko-Boos",
-      image: "path/to/image",
-      password: await (async () => await bcrypt.hash("Password1234", 3))(),
-      email: "s1kebeats@gmail.com",
-      activationLink: "s1kebeats-activation-link",
-      isActivated: true,
-    },
-  });
+      username: 's1kebeats',
+      password: await (async () => await bcrypt.hash('Password1234', 3))(),
+      email: 's1kebeats@gmail.com',
+      activationLink: 's1kebeats-activation-link',
+      isActivated: true
+    }
+  })
   const summary = await prisma.summary.create({
     data: {
-      name: "outtahere",
-      tags: {
-        connectOrCreate: [
-          {
-            where: { name: "s1kebeats" },
-            create: { name: "s1kebeats" },
-          },
-          {
-            where: { name: "wheezy" },
-            create: { name: "wheezy" },
-          },
-        ],
-      },
-      user: {
+      name: 'The Witcher',
+      author: 'Andjey S.',
+      volume: 1,
+      createdBy: {
         connect: {
-          username: "s1kebeats",
-        },
+          username: 's1kebeats'
+        }
       },
-      wavePrice: 499,
-      wave: "wave/",
-      mp3: "mp3/",
-      image: "image/",
-    },
-  });
-  summaryId = summary.id;
-});
+      content: 'The shortest summary',
+      description: 'Nice',
+      style: 'Default'
+    }
+  })
+  summaryId = summary.id
+})
 
 afterEach(async () => {
-  await prisma.user.deleteMany();
-  await prisma.summary.deleteMany();
-  await prisma.$disconnect();
-});
+  await prisma.user.deleteMany()
+  await prisma.summary.deleteMany()
+  await prisma.$disconnect()
+})
 
-it("request to not existing summary, should return 404", async () => {
-  const res = await request(app).get("/api/summary/-1");
-  await expect(res.statusCode).toBe(404);
-});
-it("valid unauthorized request, should return 200 and send individual summary data", async () => {
-  const res = await request(app).get(`/api/summary/${summaryId}`);
-  await expect(res.statusCode).toBe(200);
+it('request to not existing summary, should return 404', async () => {
+  const res = await request(app).get('/api/summary/-1')
+  expect(res.statusCode).toBe(404)
+})
+it('valid request, should return 200 and send individual summary data', async () => {
+  const res = await request(app).get(`/api/summary/${summaryId}`)
+  expect(res.statusCode).toBe(200)
 
-  await expect(res.body.comments).toBe(undefined);
   // check response body
-  await checkIndividualAuthorResponse(res.body);
-});
-it("valid authorized request, should return 200 and send individual summary data", async () => {
-  const login = await request(app).post("/api/login").send({
-    username: "s1kebeats",
-    password: "Password1234",
-  });
-  const accessToken = login.body.accessToken;
-
-  const res = await request(app).get(`/api/summary/${summaryId}`).set("Authorization", `Bearer ${accessToken}`);
-  await expect(res.statusCode).toBe(200);
-  console.log(res.body);
-  await expect(res.body.comments.length).toBe(0);
-  // check response body
-  await checkIndividualAuthorResponse(res.body);
-});
+  checkIndividualSummaryResponse(res.body)
+})

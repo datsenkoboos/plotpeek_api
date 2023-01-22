@@ -1,52 +1,56 @@
-import PrismaClient from "@prisma/client";
-import summaryIndividualSelect, { SummaryIndividual } from "../prisma-selects/summary-individual-select";
-import summarySelect, { Summary } from "../prisma-selects/summary-select";
-import ApiError from "../exceptions/api-error";
-const prisma = new PrismaClient.PrismaClient();
+import PrismaClient from '@prisma/client'
+import summaryIndividualSelect, { SummaryIndividual } from '../prisma-selects/summary-individual-select'
+import summarySelect, { Summary } from '../prisma-selects/summary-select'
+import ApiError from '../exceptions/api-error'
+const prisma = new PrismaClient.PrismaClient()
 
-class SummaryService {
-  // get all summarys
-  async getSummaries(viewed = 0): Promise<Summary[]> {
+class summaryService {
+  // get all summaries
+  async getSummaries (viewed = 0): Promise<Summary[]> {
     const summaries = await prisma.summary.findMany({
       ...summarySelect,
       skip: viewed,
-      take: 10,
-    });
-    return summaries;
+      take: 10
+    })
+    return summaries
   }
 
-  formatSummaryOrderBy(orderBy: string): PrismaClient.Prisma.SummaryAvgOrderByAggregateInput {
-    if (orderBy.includes("Lower")) {
+  formatSummaryOrderBy (orderBy: string): PrismaClient.Prisma.SummaryAvgOrderByAggregateInput {
+    if (orderBy.includes('Lower')) {
       return {
-        [orderBy.slice(0, -5)]: "asc",
-      };
+        [orderBy.slice(0, -5)]: 'asc'
+      }
     }
-    if (orderBy.includes("Higher")) {
+    if (orderBy.includes('Higher')) {
       return {
-        [orderBy.slice(0, -6)]: "desc",
-      };
+        [orderBy.slice(0, -6)]: 'desc'
+      }
     }
     return {
-      id: "desc",
-    };
+      id: 'desc'
+    }
   }
 
-  // find summarys with query
-  async findSummaries(
-    { name, author, volume, orderBy }: { name: string; author: string; volume: number; orderBy?: string },
+  // find summaries with query
+  async findSummaries (
+    { name, author, volume, orderBy }: { name?: string, author?: string, volume?: number, orderBy?: string },
     viewed = 0
   ): Promise<Summary[]> {
     const queryArgs: PrismaClient.Prisma.SummaryWhereInput = {
-      name: {
-        contains: name,
-        mode: "insensitive",
-      },
-      author: {
-        contains: author,
-        mode: "insensitive",
-      },
-      volume,
-    };
+      name: name
+        ? {
+            contains: name,
+            mode: 'insensitive'
+          }
+        : undefined,
+      author: author
+        ? {
+            contains: author,
+            mode: 'insensitive'
+          }
+        : undefined,
+      volume
+    }
     const summaries = await prisma.summary.findMany({
       take: 10,
       skip: viewed,
@@ -54,68 +58,68 @@ class SummaryService {
       orderBy: orderBy
         ? this.formatSummaryOrderBy(orderBy)
         : {
-            id: "desc",
+            id: 'desc'
           },
-      ...summarySelect,
-    });
-    return summaries;
+      ...summarySelect
+    })
+    return summaries
   }
 
-  async getIndividualSummary(id: number): Promise<SummaryIndividual> {
+  async getIndividualSummary (id: number): Promise<SummaryIndividual> {
     const summaryFindUniqueArgs = {
       where: {
-        id,
+        id
       },
-      ...summaryIndividualSelect,
-    };
-    const summary = await prisma.summary.findUnique(summaryFindUniqueArgs);
-    if (summary == null) {
-      throw ApiError.NotFound("Summary was not found.");
+      ...summaryIndividualSelect
     }
-    return summary;
+    const summary = await prisma.summary.findUnique(summaryFindUniqueArgs)
+    if (summary == null) {
+      throw ApiError.NotFound('Summary was not found.')
+    }
+    return summary
   }
 
-  async getSummaryById(id: number): Promise<PrismaClient.Summary> {
+  async getSummaryById (id: number): Promise<PrismaClient.Summary> {
     const summary = await prisma.summary.findUnique({
       where: {
-        id,
-      },
-    });
+        id
+      }
+    })
     if (summary == null) {
-      throw ApiError.NotFound("Summary was not found.");
+      throw ApiError.NotFound('Summary was not found.')
     }
-    return summary;
+    return summary
   }
 
-  async create(data: PrismaClient.Prisma.SummaryCreateInput): Promise<SummaryIndividual> {
+  async create (data: PrismaClient.Prisma.SummaryCreateInput): Promise<SummaryIndividual> {
     const summary = await prisma.summary.create({
       data,
-      ...summaryIndividualSelect,
-    });
-    return summary;
+      ...summaryIndividualSelect
+    })
+    return summary
   }
 
-  async delete(id: number) {
+  async delete (id: number) {
     await prisma.summary.delete({
       where: {
-        id,
-      },
-    });
+        id
+      }
+    })
   }
 
-  async getLikedSummaries(userId: number, viewed = 0): Promise<Summary[]> {
+  async getLikedSummaries (userId: number, viewed = 0): Promise<Summary[]> {
     const summaries = await prisma.summary.findMany({
       where: {
         likes: {
           some: {
-            userId,
-          },
-        },
+            userId
+          }
+        }
       },
-      ...summarySelect,
-    });
-    return summaries;
+      ...summarySelect
+    })
+    return summaries
   }
 }
 
-export default new SummaryService();
+export default new summaryService()

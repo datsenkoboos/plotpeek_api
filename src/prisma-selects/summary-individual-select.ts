@@ -1,6 +1,6 @@
-import PrismaClient from "@prisma/client";
+import PrismaClient from '@prisma/client'
 
-function summaryIndividualSelect(): PrismaClient.Prisma.SummaryArgs {
+function summaryIndividualSelect (): PrismaClient.Prisma.SummaryArgs {
   return {
     select: {
       id: true,
@@ -14,17 +14,17 @@ function summaryIndividualSelect(): PrismaClient.Prisma.SummaryArgs {
       createdBy: {
         select: {
           id: true,
-          username: true,
-        },
+          username: true
+        }
       },
       _count: {
         select: {
-          likes: true,
-        },
-      },
-    },
-  };
+          likes: true
+        }
+      }
+    }
+  }
 }
 
-export type SummaryIndividual = PrismaClient.Prisma.SummaryGetPayload<ReturnType<typeof summaryIndividualSelect>>;
-export default summaryIndividualSelect();
+export type SummaryIndividual = PrismaClient.Prisma.SummaryGetPayload<ReturnType<typeof summaryIndividualSelect>>
+export default summaryIndividualSelect()
