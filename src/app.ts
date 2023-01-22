@@ -11,6 +11,7 @@ const app = express();
 // enable req.ip
 app.set("trust proxy", true);
 
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({

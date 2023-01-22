@@ -125,13 +125,11 @@ it("providing already used username, should return 400", async () => {
   await expect(res.statusCode).toBe(400);
 });
 it("providing valid data, should return 200 and register new user with isActivated field = false", async () => {
-  const res = await request(app)
-    .post("/api/register")
-    .send({
-      email: "random@email.com",
-      username: "randomusername",
-      password: "Password1234",
-    })
+  const res = await request(app).post("/api/register").send({
+    email: "random@email.com",
+    username: "randomusername",
+    password: "Password1234",
+  });
   await expect(res.statusCode).toBe(200);
 
   // number of users should increase by the one that test registered

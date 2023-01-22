@@ -11,6 +11,7 @@ router.post(
   authMiddleware,
   body("name").notEmpty().bail().isLength({ max: 255 }).bail(),
   body("author").notEmpty().bail().isLength({ max: 255 }).bail(),
+  body("content").notEmpty().bail(),
   body("description").if(body("description").exists()).isLength({ max: 255 }).bail(),
   body("style").if(body("style").exists()).isLength({ max: 255 }).bail(),
   body("volume").notEmpty().bail().isDecimal().bail(),
