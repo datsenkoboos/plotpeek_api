@@ -125,12 +125,12 @@ class summaryService {
   }
 
   async generate({ name, author, volume, style }: { name: string, author: string, volume: number, style: string }) {
-    const prompt = `Write a short summary of a storyline of a book ${name} by ${author}. You summary should feel like a complete story and be readable in less than ${volume * 2.5} minutes. Your answer should not contain any information about the book, should include all major event from the book storyline.`
+    const prompt = `Write a short summary of a storyline of a book ${name} by ${author}. You summary should feel like a complete story and be readable in less than ${volume * 2.5} minutes. Your answer should not contain any information about the book, should include all major events from the book storyline.`
     const { data: summary } = await aiApi.createCompletion({
       model: "text-davinci-003",
       prompt,
-      max_tokens: ?,
-      temperature: ?,
+      max_tokens: 1024,
+      temperature: 0,
     })
     return summary.choices[0].text;
   }
