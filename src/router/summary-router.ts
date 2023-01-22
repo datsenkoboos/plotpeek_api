@@ -19,6 +19,17 @@ router.post(
   summaryController.create
 )
 
+router.post(
+  '/generate',
+  // authMiddleware,
+  body('name').notEmpty().bail().isLength({ max: 255 }).bail(),
+  body('author').notEmpty().bail().isLength({ max: 255 }).bail(),
+  body('volume').notEmpty().bail().isInt({ min: 1, max: 3 }).bail(),
+  body('style').if(body('style').exists()).isLength({ max: 255 }).bail(),
+  validationMiddleware,
+  summaryController.generate
+)
+
 router.get(
   '/',
   query('viewed').if(query('viewed').exists()).isDecimal().bail(),

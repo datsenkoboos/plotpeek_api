@@ -63,12 +63,32 @@ class summaryController {
         description,
         volume: +volume,
         style,
-        content: 'New Summary',
+        content,
         createdBy: {
           connect: { id: userId }
         }
       }))(req.body)
       const summary = await summaryService.create(payload)
+      return res.json(summary)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async generate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const payload = (({
+        name,
+        author,
+        volume,
+        style,
+      }: Record<string, string>) => ({
+        name,
+        author,
+        volume: +volume,
+        style,
+      }))(req.body)
+      const summary = await summaryService.generate(payload)
       return res.json(summary)
     } catch (error) {
       next(error)

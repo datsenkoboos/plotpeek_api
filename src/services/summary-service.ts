@@ -2,6 +2,7 @@ import PrismaClient from '@prisma/client'
 import summaryIndividualSelect, { SummaryIndividual } from '../prisma-selects/summary-individual-select'
 import summarySelect, { Summary } from '../prisma-selects/summary-select'
 import ApiError from '../exceptions/api-error'
+import aiApi from '../openai-api'
 const prisma = new PrismaClient.PrismaClient()
 
 class summaryService {
@@ -109,6 +110,8 @@ class summaryService {
 
   async getLikedSummaries (userId: number, viewed = 0): Promise<Summary[]> {
     const summaries = await prisma.summary.findMany({
+      take: 10,
+      skip: viewed,
       where: {
         likes: {
           some: {
@@ -119,6 +122,17 @@ class summaryService {
       ...summarySelect
     })
     return summaries
+  }
+
+  async generate({ name, author, volume, style }: { name: string, author: string, volume: number, style: string }) {
+    const prompt = `Write a short summary of a storyline of a book ${name} by ${author}. You summary should feel like a complete story and be readable in less than ${volume * 2.5} minutes. Your answer should not contain any information about the book, should include all major event from the book storyline.`
+    const { data: summary } = await aiApi.createCompletion({
+      model: "text-davinci-003",
+      prompt,
+      max_tokens: ?,
+      temperature: ?,
+    })
+    return summary.choices[0].text;
   }
 }
 
