@@ -75,42 +75,42 @@ afterEach(async () => {
   await prisma.$disconnect();
 });
 
-it("valid request without query, should return 200 and all Plotpeeks (4)", async () => {
+it("valid request without query, should return 200 and all plotpeeks (4)", async () => {
   const res = await request(app).get("/api/plotpeek/");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(4);
+  expect(res.body.plotpeeks.length).toBe(4);
 });
-it("valid request with filter by name: The Witcher, should return 200 and Plotpeeks with equal name (2)", async () => {
+it("valid request with filter by name: The Witcher, should return 200 and plotpeeks with equal name (2)", async () => {
   const res = await request(app).get("/api/plotpeek/?name=witcher");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(2);
+  expect(res.body.plotpeeks.length).toBe(2);
 });
-it("valid request with filter by volume: 3, should return 200 and Plotpeeks with given volume (2)", async () => {
+it("valid request with filter by volume: 3, should return 200 and plotpeeks with given volume (2)", async () => {
   const res = await request(app).get("/api/plotpeek/?volume=3");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(2);
+  expect(res.body.plotpeeks.length).toBe(2);
 });
 it("valid request with filter by author: Anne Frank, should return 200 and plotpeek with author containing text query (1)", async () => {
   const res = await request(app).get("/api/plotpeek/?author=anne+frank");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(1);
-  expect(res.body.Plotpeeks[0].name).toBe("The Diary of a Young Girl");
+  expect(res.body.plotpeeks.length).toBe(1);
+  expect(res.body.plotpeeks[0].name).toBe("The Diary of a Young Girl");
 });
-it("valid request with ordering by volumeHigher, should return 200, all Plotpeeks (4) and sort them by volume higher first", async () => {
+it("valid request with ordering by volumeHigher, should return 200, all plotpeeks (4) and sort them by volume higher first", async () => {
   const res = await request(app).get("/api/plotpeek/?sort=volumeHigher");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(4);
-  expect(res.body.Plotpeeks[0].name).toBe("To Kill a Mockingbird");
+  expect(res.body.plotpeeks.length).toBe(4);
+  expect(res.body.plotpeeks[0].name).toBe("To Kill a Mockingbird");
 });
-it("valid request with ordering by volumeLower, should return 200, all Plotpeeks (4) and sort them by volume lower first", async () => {
+it("valid request with ordering by volumeLower, should return 200, all plotpeeks (4) and sort them by volume lower first", async () => {
   const res = await request(app).get("/api/plotpeek/?sort=volumeLower");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(4);
-  expect(res.body.Plotpeeks[0].name).toBe("The Diary of a Young Girl");
+  expect(res.body.plotpeeks.length).toBe(4);
+  expect(res.body.plotpeeks[0].name).toBe("The Diary of a Young Girl");
 });
 it("valid request with filter by both volume and name, should return 200 and plotpeek with name containing 'witcher' and with volume = 3", async () => {
   const res = await request(app).get("/api/plotpeek/?name=witcher&volume=3");
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(1);
-  expect(res.body.Plotpeeks[0].name).toBe("witcher");
+  expect(res.body.plotpeeks.length).toBe(1);
+  expect(res.body.plotpeeks[0].name).toBe("witcher");
 });

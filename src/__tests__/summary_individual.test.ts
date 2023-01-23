@@ -9,7 +9,6 @@ function checkIndividualplotpeekResponse(body: any) {
   expect(body.author).toBe("Andjey S.");
   expect(body.content).toBe("The shortest plotpeek");
   expect(body.description).toBe("Nice");
-  expect(body.style).toBe("Default");
   expect(body.views).toBe(0);
   expect(body._count.likes).toBe(0);
 }
@@ -37,7 +36,6 @@ beforeEach(async () => {
       },
       content: "The shortest plotpeek",
       description: "Nice",
-      style: "Default",
     },
   });
   plotpeekId = plotpeek.id;

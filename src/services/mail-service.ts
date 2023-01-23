@@ -1,8 +1,8 @@
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer";
 
 class MailService {
-  transporter: nodemailer.Transporter
-  constructor () {
+  transporter: nodemailer.Transporter;
+  constructor() {
     // nodemailer config
     const opts = {
       host: process.env.SMTP_HOST,
@@ -12,8 +12,8 @@ class MailService {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
-    }
-    this.transporter = nodemailer.createTransport(opts)
+    };
+    this.transporter = nodemailer.createTransport(opts);
   }
 
   async sendActivationMail(to: string, link: string): Promise<void> {
@@ -31,4 +31,4 @@ class MailService {
   }
 }
 
-export default new MailService()
+export default new MailService();

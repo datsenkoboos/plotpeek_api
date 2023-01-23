@@ -52,14 +52,14 @@ it("valid request, should return liked list after liking a plotpeek", async () =
 
   const res = await request(app).get("/api/liked").set("Authorization", `Bearer ${accessToken}`);
   expect(res.statusCode).toBe(200);
-  expect(res.body.Plotpeeks.length).toBe(1);
-  expect(res.body.Plotpeeks[0].name).toBe("The Witcher");
+  expect(res.body.plotpeeks.length).toBe(1);
+  expect(res.body.plotpeeks[0].name).toBe("The Witcher");
   expect(res.body.viewed).toBe(1);
 
   await request(app).put(`/api/plotpeek/${id}/like`).set("Authorization", `Bearer ${accessToken}`);
 
   const removed = await request(app).get("/api/liked").set("Authorization", `Bearer ${accessToken}`);
   expect(removed.statusCode).toBe(200);
-  expect(removed.body.Plotpeeks.length).toBe(0);
+  expect(removed.body.plotpeeks.length).toBe(0);
   expect(removed.body.viewed).toBe(0);
 });

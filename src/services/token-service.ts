@@ -1,32 +1,32 @@
-import jsonwebtoken, { JwtPayload } from 'jsonwebtoken'
-import PrismaClient from '@prisma/client'
-import UserDto from '../dtos/user-dto'
+import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
+import PrismaClient from "@prisma/client";
+import UserDto from "../dtos/user-dto";
 
-const prisma = new PrismaClient.PrismaClient()
+const prisma = new PrismaClient.PrismaClient();
 
 class TokenService {
   generateTokens(
     payload: UserDto,
     refresh: boolean
   ): {
-      accessToken: string
-      refreshToken?: string
-    } {
+    accessToken: string;
+    refreshToken?: string;
+  } {
     const tokens: {
-      accessToken: string
-      refreshToken?: string
+      accessToken: string;
+      refreshToken?: string;
     } = {
       accessToken: jsonwebtoken.sign(Object.assign({}, payload), process.env.JWT_ACCESS_SECRET!, {
-        expiresIn: '15m'
-      })
-    }
+        expiresIn: "15m",
+      }),
+    };
     if (refresh) {
       tokens.refreshToken = jsonwebtoken.sign(Object.assign({}, payload), process.env.JWT_REFRESH_SECRET!, {
-        expiresIn: '30d'
-      })
+        expiresIn: "30d",
+      });
     }
 
-    return tokens
+    return tokens;
   }
 
   async saveToken(userId: number, ip: string, refreshToken: string): Promise<PrismaClient.Token> {
@@ -46,8 +46,8 @@ class TokenService {
         },
       },
     };
-    const token = await prisma.token.upsert(tokenUpsertArgs)
-    return token
+    const token = await prisma.token.upsert(tokenUpsertArgs);
+    return token;
   }
 
   // remove token for user logout
@@ -56,9 +56,9 @@ class TokenService {
       where: {
         ip,
       },
-    }
-    const token = await prisma.token.delete(tokenDeleteArgs)
-    return token
+    };
+    const token = await prisma.token.delete(tokenDeleteArgs);
+    return token;
   }
 
   // check for token existence
@@ -67,29 +67,29 @@ class TokenService {
       where: {
         refreshToken,
       },
-    })
-    return token
+    });
+    return token;
   }
 
   // decode data from given tokens
   validateAccessToken(accessToken: string): null | JwtPayload {
     try {
-      const decoded = jsonwebtoken.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as JwtPayload
+      const decoded = jsonwebtoken.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as JwtPayload;
       // return user data
-      return decoded
+      return decoded;
     } catch (error) {
-      return null
+      return null;
     }
   }
 
   validateRefreshToken(refreshToken: string): null | JwtPayload {
     try {
-      const decoded = jsonwebtoken.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as JwtPayload
+      const decoded = jsonwebtoken.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as JwtPayload;
       // return user data
-      return decoded
+      return decoded;
     } catch (error) {
-      return null
+      return null;
     }
   }
 }
-export default new TokenService()
+export default new TokenService();

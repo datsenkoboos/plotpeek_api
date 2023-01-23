@@ -14,7 +14,6 @@ const data = {
   },
   content: "The shortest plotpeek",
   description: "Nice",
-  style: "Default",
 };
 
 beforeEach(async () => {
