@@ -1,6 +1,6 @@
-import PrismaClient from '@prisma/client'
+import PrismaClient from "@prisma/client";
 
-function PlotpeekSelect (): PrismaClient.Prisma.PlotpeekArgs {
+function PlotpeekSelect(): PrismaClient.Prisma.PlotpeekArgs {
   return {
     select: {
       id: true,
@@ -11,12 +11,12 @@ function PlotpeekSelect (): PrismaClient.Prisma.PlotpeekArgs {
       views: true,
       _count: {
         select: {
-          likes: true
-        }
-      }
-    }
-  }
+          likes: true,
+        },
+      },
+    },
+  };
 }
 
-export type plotpeek = PrismaClient.Prisma.PlotpeekGetPayload<ReturnType<typeof PlotpeekSelect>>
-export default PlotpeekSelect()
+export type plotpeek = PrismaClient.Prisma.PlotpeekGetPayload<ReturnType<typeof PlotpeekSelect>>;
+export default PlotpeekSelect();
