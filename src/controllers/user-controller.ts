@@ -92,7 +92,7 @@ class UserController {
     }
   }
 
-  async getLiked (req: Request, res: Response, next: NextFunction) {
+  async getLikedSummaries (req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id
       const summaries = await summaryService.getLikedSummaries(userId, req.query.viewed ? +req.query.viewed : 0)

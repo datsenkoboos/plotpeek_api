@@ -7,7 +7,6 @@ import { Summary } from 'prisma-selects/summary-select'
 import { SummaryIndividual } from 'prisma-selects/summary-individual-select'
 
 class summaryController {
-  // find many summaries
   async getSummaries (req: Request, res: Response, next: NextFunction) {
     try {
       let summaries: Summary[]
@@ -47,7 +46,7 @@ class summaryController {
     }
   }
 
-  async create (req: Request, res: Response, next: NextFunction) {
+  async createSummary (req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id
       const payload: PrismaClient.Prisma.SummaryCreateInput = (({
@@ -68,34 +67,32 @@ class summaryController {
           connect: { id: userId }
         }
       }))(req.body)
-      const summary = await summaryService.create(payload)
+      const summary = await summaryService.createSummary(payload)
       return res.json(summary)
     } catch (error) {
       next(error)
     }
   }
 
-  async generate(req: Request, res: Response, next: NextFunction) {
+  async generateSummaryContent (req: Request, res: Response, next: NextFunction) {
     try {
-      const payload = (({
+      const payload: {
+        name: string
+        author: string
+        volume: number
+      } = (({ name, author, volume }: Record<string, string>) => ({
         name,
         author,
-        volume,
-        style,
-      }: Record<string, string>) => ({
-        name,
-        author,
-        volume: +volume,
-        style,
+        volume: +volume
       }))(req.body)
-      const summary = await summaryService.generate(payload)
+      const summary = await summaryService.generateSummaryContent(payload)
       return res.json(summary)
     } catch (error) {
       next(error)
     }
   }
 
-  async likeToggle (req: Request, res: Response, next: NextFunction) {
+  async toggleSummaryLike (req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id
       const id = +req.params.id
@@ -111,23 +108,6 @@ class summaryController {
         like = await likeService.createLike(summary.id, userId)
       }
       return res.json(like)
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  async delete (req: Request, res: Response, next: NextFunction) {
-    try {
-      const userId = req.user!.id
-      const id = +req.params.id
-      // Has built in 404 Throw
-      const summary = await summaryService.getSummaryById(id)
-      if (userId !== summary.createdById) {
-        next(ApiError.UnauthorizedUser())
-        return
-      }
-      await summaryService.delete(summary.id)
-      return res.json('success')
     } catch (error) {
       next(error)
     }

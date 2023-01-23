@@ -16,7 +16,7 @@ class MailService {
     this.transporter = nodemailer.createTransport(opts)
   }
 
-  async sendActivationMail (to: string, link: string) {
+  async sendActivationMail (to: string, link: string): Promise<void> {
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,

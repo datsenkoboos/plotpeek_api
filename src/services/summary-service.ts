@@ -5,15 +5,12 @@ import ApiError from '../exceptions/api-error'
 import aiApi from '../openai-api'
 const prisma = new PrismaClient.PrismaClient()
 
-class summaryService {
-  // get all summaries
-  async getSummaries (viewed = 0): Promise<Summary[]> {
-    const summaries = await prisma.summary.findMany({
-      ...summarySelect,
-      skip: viewed,
-      take: 10
-    })
-    return summaries
+class SummaryService {
+  // utils
+  generatePrompt (name: string, author: string, volume: number): string {
+    return `Write a short summary of a storyline of a book "${name}" written by ${author}. Your summary should feel like a complete story and be readable in less than ${
+      volume * 2.5
+    } minutes. Your answer should not contain any information about the book, should include all major events from the book storyline.`
   }
 
   formatSummaryOrderBy (orderBy: string): PrismaClient.Prisma.SummaryAvgOrderByAggregateInput {
@@ -30,6 +27,16 @@ class summaryService {
     return {
       id: 'desc'
     }
+  }
+
+  // get all summaries
+  async getSummaries (viewed = 0): Promise<Summary[]> {
+    const summaries = await prisma.summary.findMany({
+      ...summarySelect,
+      skip: viewed,
+      take: 10
+    })
+    return summaries
   }
 
   // find summaries with query
@@ -92,7 +99,7 @@ class summaryService {
     return summary
   }
 
-  async create (data: PrismaClient.Prisma.SummaryCreateInput): Promise<SummaryIndividual> {
+  async createSummary (data: PrismaClient.Prisma.SummaryCreateInput): Promise<SummaryIndividual> {
     const summary = await prisma.summary.create({
       data,
       ...summaryIndividualSelect
@@ -124,16 +131,17 @@ class summaryService {
     return summaries
   }
 
-  async generate({ name, author, volume, style }: { name: string, author: string, volume: number, style: string }) {
-    const prompt = `Write a short summary of a storyline of a book ${name} by ${author}. You summary should feel like a complete story and be readable in less than ${volume * 2.5} minutes. Your answer should not contain any information about the book, should include all major events from the book storyline.`
-    const { data: summary } = await aiApi.createCompletion({
-      model: "text-davinci-003",
+  async generateSummaryContent ({ name, author, volume }: { name: string, author: string, volume: number }): Promise<string | undefined> {
+    const prompt = this.generatePrompt(name, author, volume)
+    const { data } = await aiApi.createCompletion({
+      model: 'text-davinci-003',
       prompt,
       max_tokens: 1024,
-      temperature: 0,
+      temperature: 0
     })
-    return summary.choices[0].text;
+    const content = data.choices[0].text;
+    return content
   }
 }
 
-export default new summaryService()
+export default new SummaryService()

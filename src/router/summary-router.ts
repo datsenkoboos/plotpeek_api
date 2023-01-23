@@ -16,18 +16,17 @@ router.post(
   body('style').if(body('style').exists()).isLength({ max: 255 }).bail(),
   body('volume').notEmpty().bail().isDecimal().bail(),
   validationMiddleware,
-  summaryController.create
+  summaryController.createSummary
 )
 
 router.post(
   '/generate',
-  // authMiddleware,
+  authMiddleware,
   body('name').notEmpty().bail().isLength({ max: 255 }).bail(),
   body('author').notEmpty().bail().isLength({ max: 255 }).bail(),
   body('volume').notEmpty().bail().isInt({ min: 1, max: 3 }).bail(),
-  body('style').if(body('style').exists()).isLength({ max: 255 }).bail(),
   validationMiddleware,
-  summaryController.generate
+  summaryController.generateSummaryContent
 )
 
 router.get(
@@ -44,15 +43,7 @@ router.put(
   authMiddleware,
   param('id').isDecimal().bail(),
   validationMiddleware,
-  summaryController.likeToggle
-)
-
-router.delete(
-  '/:id/delete',
-  authMiddleware,
-  param('id').isDecimal().bail(),
-  validationMiddleware,
-  summaryController.delete
+  summaryController.toggleSummaryLike
 )
 
 export default router
