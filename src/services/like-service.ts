@@ -1,5 +1,5 @@
-import PrismaClient from "@prisma/client";
-const prisma = new PrismaClient.PrismaClient();
+import PrismaClient from '@prisma/client'
+const prisma = new PrismaClient.PrismaClient()
 
 class LikeService {
   async getLikeByIdentifier(plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
@@ -7,8 +7,8 @@ class LikeService {
       where: {
         likeIdentifier: { userId, plotpeekId },
       },
-    });
-    return like;
+    })
+    return like
   }
 
   async deleteLike(plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
@@ -16,8 +16,8 @@ class LikeService {
       where: {
         likeIdentifier: { userId, plotpeekId },
       },
-    });
-    return like;
+    })
+    return like
   }
 
   async createLike(plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
@@ -31,8 +31,8 @@ class LikeService {
         },
       },
     });
-    return like;
+    return like
   }
 }
 
-export default new LikeService();
+export default new LikeService()

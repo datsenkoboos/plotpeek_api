@@ -1,4 +1,4 @@
-import PrismaClient from "@prisma/client";
+import PrismaClient from '@prisma/client'
 
 function PlotpeekIndividualSelect(): PrismaClient.Prisma.PlotpeekArgs {
   return {
@@ -22,8 +22,8 @@ function PlotpeekIndividualSelect(): PrismaClient.Prisma.PlotpeekArgs {
         },
       },
     },
-  };
+  }
 }
 
-export type plotpeekIndividual = PrismaClient.Prisma.PlotpeekGetPayload<ReturnType<typeof PlotpeekIndividualSelect>>;
-export default PlotpeekIndividualSelect();
+export type plotpeekIndividual = PrismaClient.Prisma.PlotpeekGetPayload<ReturnType<typeof PlotpeekIndividualSelect>>
+export default PlotpeekIndividualSelect()

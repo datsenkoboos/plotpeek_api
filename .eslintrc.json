@@ -3,9 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  // "extends": "standard-with-typescript",
-  "extends": "google",
-  "overrides": [],
+  "extends": ["standard-with-typescript", "google"],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",

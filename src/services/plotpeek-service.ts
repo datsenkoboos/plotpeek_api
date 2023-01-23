@@ -1,32 +1,32 @@
-import PrismaClient from "@prisma/client";
-import plotpeekIndividualSelect, { plotpeekIndividual } from "../prisma-selects/plotpeek-individual-select";
-import plotpeekSelect, { plotpeek } from "../prisma-selects/plotpeek-select";
-import ApiError from "../exceptions/api-error";
-import aiApi from "../openai-api";
-const prisma = new PrismaClient.PrismaClient();
+import PrismaClient from '@prisma/client'
+import plotpeekIndividualSelect, { plotpeekIndividual } from '../prisma-selects/plotpeek-individual-select'
+import plotpeekSelect, { plotpeek } from '../prisma-selects/plotpeek-select'
+import ApiError from '../exceptions/api-error'
+import aiApi from '../openai-api'
+const prisma = new PrismaClient.PrismaClient()
 
 class PlotpeekService {
   // utils
   generatePrompt(name: string, author: string, volume: number): string {
     return `Write a short plotpeek of a storyline of a book "${name}" written by ${author}. Your plotpeek should feel like a complete story and be readable in less than ${
       volume * 2.5
-    } minutes. Your answer should not contain any information about the book, should include all major events from the book storyline.`;
+    } minutes. Your answer should not contain any information about the book, should include all major events from the book storyline.`
   }
 
   formatPlotpeekOrderBy(orderBy: string): PrismaClient.Prisma.PlotpeekAvgOrderByAggregateInput {
-    if (orderBy.includes("Lower")) {
+    if (orderBy.includes('Lower')) {
       return {
-        [orderBy.slice(0, -5)]: "asc",
-      };
+        [orderBy.slice(0, -5)]: 'asc'
+      }
     }
-    if (orderBy.includes("Higher")) {
+    if (orderBy.includes('Higher')) {
       return {
-        [orderBy.slice(0, -6)]: "desc",
-      };
+        [orderBy.slice(0, -6)]: 'desc'
+      }
     }
     return {
-      id: "desc",
-    };
+      id: 'desc'
+    }
   }
 
   // get all Plotpeeks
@@ -36,41 +36,41 @@ class PlotpeekService {
       skip: viewed,
       take: 10,
     });
-    return plotpeeks;
+    return plotpeeks
   }
 
   // find Plotpeeks with query
   async findPlotpeeks(
-    { name, author, volume, orderBy }: { name?: string; author?: string; volume?: number; orderBy?: string },
+    { name, author, volume, orderBy }: { name?: string, author?: string, volume?: number, orderBy?: string },
     viewed = 0
   ): Promise<plotpeek[]> {
     const queryArgs: PrismaClient.Prisma.PlotpeekWhereInput = {
-      name: name
-        ? {
+      name: name ?
+          {
             contains: name,
-            mode: "insensitive",
-          }
-        : undefined,
-      author: author
-        ? {
+            mode: 'insensitive'
+        } :
+        undefined,
+      author: author ?
+          {
             contains: author,
-            mode: "insensitive",
-          }
-        : undefined,
+            mode: 'insensitive'
+        } :
+        undefined,
       volume,
     };
     const plotpeeks = await prisma.plotpeek.findMany({
       take: 10,
       skip: viewed,
       where: queryArgs,
-      orderBy: orderBy
-        ? this.formatPlotpeekOrderBy(orderBy)
-        : {
-            id: "desc",
-          },
+      orderBy: orderBy ?
+        this.formatPlotpeekOrderBy(orderBy) :
+          {
+            id: 'desc'
+        },
       ...plotpeekSelect,
     });
-    return plotpeeks;
+    return plotpeeks
   }
 
   async getIndividualPlotpeek(id: number): Promise<plotpeekIndividual> {
@@ -80,11 +80,11 @@ class PlotpeekService {
       },
       ...plotpeekIndividualSelect,
     };
-    const plotpeek = await prisma.plotpeek.findUnique(plotpeekFindUniqueArgs);
+    const plotpeek = await prisma.plotpeek.findUnique(plotpeekFindUniqueArgs)
     if (plotpeek == null) {
-      throw ApiError.NotFound("plotpeek was not found.");
+      throw ApiError.NotFound('plotpeek was not found.')
     }
-    return plotpeek;
+    return plotpeek
   }
 
   async getPlotpeekById(id: number): Promise<PrismaClient.Plotpeek> {
@@ -92,11 +92,11 @@ class PlotpeekService {
       where: {
         id,
       },
-    });
+    })
     if (plotpeek == null) {
-      throw ApiError.NotFound("plotpeek was not found.");
+      throw ApiError.NotFound('plotpeek was not found.')
     }
-    return plotpeek;
+    return plotpeek
   }
 
   async createPlotpeek(data: PrismaClient.Prisma.PlotpeekCreateInput): Promise<plotpeekIndividual> {
@@ -104,7 +104,7 @@ class PlotpeekService {
       data,
       ...plotpeekIndividualSelect,
     });
-    return plotpeek;
+    return plotpeek
   }
 
   async delete(id: number) {
@@ -112,7 +112,7 @@ class PlotpeekService {
       where: {
         id,
       },
-    });
+    })
   }
 
   async getLikedPlotpeeks(userId: number, viewed = 0): Promise<plotpeek[]> {
@@ -128,7 +128,7 @@ class PlotpeekService {
       },
       ...plotpeekSelect,
     });
-    return Plotpeeks;
+    return Plotpeeks
   }
 
   async generatePlotpeekContent({
@@ -136,20 +136,20 @@ class PlotpeekService {
     author,
     volume,
   }: {
-    name: string;
-    author: string;
-    volume: number;
+    name: string
+    author: string
+    volume: number
   }): Promise<string | undefined> {
-    const prompt = this.generatePrompt(name, author, volume);
+    const prompt = this.generatePrompt(name, author, volume)
     const { data } = await aiApi.createCompletion({
-      model: "text-davinci-003",
+      model: 'text-davinci-003',
       prompt,
       max_tokens: 1024,
       temperature: 0,
     });
-    const content = data.choices[0].text;
-    return content;
+    const content = data.choices[0].text
+    return content
   }
 }
 
-export default new PlotpeekService();
+export default new PlotpeekService()

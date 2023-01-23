@@ -1,10 +1,10 @@
-import userRouter from "./user-router";
-import plotpeekRouter from "./plotpeek-router";
-import { Router } from "express";
+import userRouter from './user-router'
+import plotpeekRouter from './plotpeek-router'
+import { Router } from 'express'
 
-const router = Router();
+const router = Router()
 
-router.use("/", userRouter);
-router.use("/plotpeek", plotpeekRouter);
+router.use('/', userRouter)
+router.use('/plotpeek', plotpeekRouter)
 
-export default router;
+export default router
