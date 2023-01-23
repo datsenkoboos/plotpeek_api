@@ -2,7 +2,7 @@ import userService from '../services/user-service'
 import ApiError from '../exceptions/api-error'
 import { Request, Response, NextFunction } from 'express'
 import PrismaClient from '@prisma/client'
-import summaryService from '../services/summary-service'
+import plotpeekService from '../services/plotpeek-service'
 
 class UserController {
   async register (req: Request, res: Response, next: NextFunction) {
@@ -92,13 +92,13 @@ class UserController {
     }
   }
 
-  async getLikedSummaries (req: Request, res: Response, next: NextFunction) {
+  async getLikedPlotpeeks (req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id
-      const summaries = await summaryService.getLikedSummaries(userId, req.query.viewed ? +req.query.viewed : 0)
+      const Plotpeeks = await plotpeekService.getLikedPlotpeeks(userId, req.query.viewed ? +req.query.viewed : 0)
       return res.json({
-        summaries,
-        viewed: req.query.viewed ? +req.query.viewed + summaries.length : summaries.length
+        Plotpeeks,
+        viewed: req.query.viewed ? +req.query.viewed + Plotpeeks.length : Plotpeeks.length
       })
     } catch (error) {
       next(error)

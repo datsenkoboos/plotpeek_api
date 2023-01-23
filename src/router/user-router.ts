@@ -30,7 +30,7 @@ router.post(
   userController.login
 )
 
-router.get('/liked', authMiddleware, userController.getLikedSummaries)
+router.get('/liked', authMiddleware, userController.getLikedPlotpeeks)
 
 // logout
 router.post('/logout', userController.logout)

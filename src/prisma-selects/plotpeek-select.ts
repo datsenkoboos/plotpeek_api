@@ -1,6 +1,6 @@
 import PrismaClient from '@prisma/client'
 
-function summarySelect (): PrismaClient.Prisma.SummaryArgs {
+function PlotpeekSelect (): PrismaClient.Prisma.PlotpeekArgs {
   return {
     select: {
       id: true,
@@ -18,5 +18,5 @@ function summarySelect (): PrismaClient.Prisma.SummaryArgs {
   }
 }
 
-export type Summary = PrismaClient.Prisma.SummaryGetPayload<ReturnType<typeof summarySelect>>
-export default summarySelect()
+export type plotpeek = PrismaClient.Prisma.PlotpeekGetPayload<ReturnType<typeof PlotpeekSelect>>
+export default PlotpeekSelect()

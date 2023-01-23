@@ -2,32 +2,32 @@ import PrismaClient from '@prisma/client'
 const prisma = new PrismaClient.PrismaClient()
 
 class LikeService {
-  async getLikeByIdentifier (summaryId: number, userId: number): Promise<PrismaClient.Like | null> {
+  async getLikeByIdentifier (plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
     const like = await prisma.like.findUnique({
       where: {
-        likeIdentifier: { userId, summaryId }
+        likeIdentifier: { userId, plotpeekId }
       }
     })
     return like
   }
 
-  async deleteLike (summaryId: number, userId: number): Promise<PrismaClient.Like | null> {
+  async deleteLike (plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
     const like = await prisma.like.delete({
       where: {
-        likeIdentifier: { userId, summaryId }
+        likeIdentifier: { userId, plotpeekId }
       }
     })
     return like
   }
 
-  async createLike (summaryId: number, userId: number): Promise<PrismaClient.Like | null> {
+  async createLike (plotpeekId: number, userId: number): Promise<PrismaClient.Like | null> {
     const like = await prisma.like.create({
       data: {
         user: {
           connect: { id: userId }
         },
-        summary: {
-          connect: { id: summaryId }
+        plotpeek: {
+          connect: { id: plotpeekId }
         }
       }
     })

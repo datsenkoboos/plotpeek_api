@@ -21,6 +21,7 @@ specifiers:
   dotenv: ^16.0.3
   esbuild: ^0.16.13
   eslint: ^8.0.1
+  eslint-config-google: ^0.14.0
   eslint-config-standard-with-typescript: ^26.0.0
   eslint-plugin-import: ^2.25.2
   eslint-plugin-n: ^15.0.0
@@ -78,6 +79,7 @@ devDependencies:
   cross-env: 7.0.3
   esbuild: 0.16.17
   eslint: 8.32.0
+  eslint-config-google: 0.14.0_eslint@8.32.0
   eslint-config-standard-with-typescript: 26.0.0_ueqzd4a4aaqcnhterfnur4s5iy
   eslint-plugin-import: 2.27.5_eslint@8.32.0
   eslint-plugin-n: 15.6.1_eslint@8.32.0
@@ -2253,6 +2255,15 @@ packages:
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+    dev: true
+
+  /eslint-config-google/0.14.0_eslint@8.32.0:
+    resolution: {integrity: sha512-WsbX4WbjuMvTdeVL6+J3rK1RGhCTqjsFjX7UMSMgZiyxxaNLkoJENbrGExzERFeoTpGw3F3FypTiWAP9ZXzkEw==}
+    engines: {node: '>=0.10.0'}
+    peerDependencies:
+      eslint: '>=5.16.0'
+    dependencies:
+      eslint: 8.32.0
     dev: true
 
   /eslint-config-standard-with-typescript/26.0.0_ueqzd4a4aaqcnhterfnur4s5iy:

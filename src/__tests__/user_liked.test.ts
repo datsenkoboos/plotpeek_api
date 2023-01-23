@@ -16,7 +16,7 @@ beforeEach(async () => {
       }
     ]
   })
-  const summary = await prisma.summary.create({
+  const plotpeek = await prisma.plotpeek.create({
     data: {
       name: 'The Witcher',
       author: 'Andjey S.',
@@ -26,10 +26,10 @@ beforeEach(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
-  id = summary.id
+  id = plotpeek.id
 })
 
 afterEach(async () => {
@@ -41,25 +41,25 @@ it('unauthorized request, should return 401', async () => {
   const res = await request(app).get('/api/liked')
   expect(res.statusCode).toBe(401)
 })
-it('valid request, should return liked list after liking a summary', async () => {
+it('valid request, should return liked list after liking a plotpeek', async () => {
   const login = await request(app).post('/api/login').send({
     username: 's1kebeats',
     password: 'Password1234'
   })
   const accessToken = login.body.accessToken
 
-  await request(app).put(`/api/summary/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
+  await request(app).put(`/api/plotpeek/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
 
   const res = await request(app).get('/api/liked').set('Authorization', `Bearer ${accessToken}`)
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(1)
-  expect(res.body.summaries[0].name).toBe('The Witcher')
+  expect(res.body.Plotpeeks.length).toBe(1)
+  expect(res.body.Plotpeeks[0].name).toBe('The Witcher')
   expect(res.body.viewed).toBe(1)
 
-  await request(app).put(`/api/summary/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
+  await request(app).put(`/api/plotpeek/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
 
   const removed = await request(app).get('/api/liked').set('Authorization', `Bearer ${accessToken}`)
   expect(removed.statusCode).toBe(200)
-  expect(removed.body.summaries.length).toBe(0)
+  expect(removed.body.Plotpeeks.length).toBe(0)
   expect(removed.body.viewed).toBe(0)
 })

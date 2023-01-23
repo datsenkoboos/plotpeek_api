@@ -12,7 +12,7 @@ const data = {
       username: 's1kebeats'
     }
   },
-  content: 'The shortest summary',
+  content: 'The shortest plotpeek',
   description: 'Nice',
   style: 'Default'
 }
@@ -33,17 +33,17 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await prisma.user.deleteMany()
-  await prisma.summary.deleteMany()
+  await prisma.plotpeek.deleteMany()
   await prisma.$disconnect()
 })
 
 it('GET request should return 400', async () => {
-  const res = await request(app).get('/api/summary/create')
-  // 400 because of Id param validator on the individual summary path
+  const res = await request(app).get('/api/plotpeek/create')
+  // 400 because of Id param validator on the individual plotpeek path
   expect(res.statusCode).toBe(400)
 })
 it('not authorized request, should return 401', async () => {
-  const res = await request(app).post('/api/summary/create').send(data)
+  const res = await request(app).post('/api/plotpeek/create').send(data)
   expect(res.statusCode).toBe(401)
 })
 it('request without name provided should return 400', async () => {
@@ -54,7 +54,7 @@ it('request without name provided should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/create')
+    .post('/api/plotpeek/create')
     .set('Authorization', `Bearer ${accessToken}`)
     .send((({ name, ...rest }) => ({ ...rest }))(data))
   expect(res.statusCode).toBe(400)
@@ -67,7 +67,7 @@ it('request without author provided should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/create')
+    .post('/api/plotpeek/create')
     .set('Authorization', `Bearer ${accessToken}`)
     .send((({ author, ...rest }) => ({ ...rest }))(data))
   expect(res.statusCode).toBe(400)
@@ -80,7 +80,7 @@ it('request volume wave provided should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/create')
+    .post('/api/plotpeek/create')
     .set('Authorization', `Bearer ${accessToken}`)
     .send((({ volume, ...rest }) => ({ ...rest }))(data))
   expect(res.statusCode).toBe(400)
@@ -93,23 +93,23 @@ it('request without content provided should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/create')
+    .post('/api/plotpeek/create')
     .set('Authorization', `Bearer ${accessToken}`)
     .send((({ content, ...rest }) => ({ ...rest }))(data))
   expect(res.statusCode).toBe(400)
 })
-it('request with valid data provided, should return 200 and create the summary', async () => {
+it('request with valid data provided, should return 200 and create the plotpeek', async () => {
   const login = await request(app).post('/api/login').send({
     username: 's1kebeats',
     password: 'Password1234'
   })
   const accessToken = login.body.accessToken
 
-  const res = await request(app).post('/api/summary/create').set('Authorization', `Bearer ${accessToken}`).send(data)
+  const res = await request(app).post('/api/plotpeek/create').set('Authorization', `Bearer ${accessToken}`).send(data)
   expect(res.statusCode).toBe(200)
 
   const id = res.body.id
 
-  const summary = await request(app).get(`/api/summary/${id}`)
-  expect(summary.statusCode).toBe(200)
+  const plotpeek = await request(app).get(`/api/plotpeek/${id}`)
+  expect(plotpeek.statusCode).toBe(200)
 }, 25000)

@@ -22,12 +22,12 @@ afterAll(async () => {
   await prisma.$disconnect()
 })
 
-it('GET request should return 400, because of summary individual route', async () => {
-  const res = await request(app).get('/api/summary/generate')
+it('GET request should return 400, because of plotpeek individual route', async () => {
+  const res = await request(app).get('/api/plotpeek/generate')
   expect(res.statusCode).toBe(400)
 })
 it('unauthorized request should return 401', async () => {
-  const res = await request(app).post('/api/summary/generate')
+  const res = await request(app).post('/api/plotpeek/generate')
   expect(res.statusCode).toBe(401)
 })
 it('request without name provided, should return 400', async () => {
@@ -38,7 +38,7 @@ it('request without name provided, should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/generate')
+    .post('/api/plotpeek/generate')
     .send({
       volume: 1,
       author: 'Author'
@@ -55,7 +55,7 @@ it('request without author provided, should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/generate')
+    .post('/api/plotpeek/generate')
     .send({
       volume: 1,
       name: 'Name'
@@ -72,7 +72,7 @@ it('request without volume provided, should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/generate')
+    .post('/api/plotpeek/generate')
     .send({
       name: 'Name',
       author: 'Author'
@@ -89,7 +89,7 @@ it('request with volume < 1, should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/generate')
+    .post('/api/plotpeek/generate')
     .send({
       name: 'Name',
       author: 'Author',
@@ -107,7 +107,7 @@ it('request with volume > 3, should return 400', async () => {
   const accessToken = login.body.accessToken
 
   const res = await request(app)
-    .post('/api/summary/generate')
+    .post('/api/plotpeek/generate')
     .send({
       name: 'Name',
       author: 'Author',
@@ -117,7 +117,7 @@ it('request with volume > 3, should return 400', async () => {
 
   expect(res.statusCode).toBe(400)
 })
-// it('valid request, should return 200 and generate summary content', async () => {
+// it('valid request, should return 200 and generate plotpeek content', async () => {
 //   const login = await request(app).post('/api/login').send({
 //     username: 's1kebeats',
 //     password: 'Password1234'
@@ -125,7 +125,7 @@ it('request with volume > 3, should return 400', async () => {
 //   const accessToken = login.body.accessToken
 
 //   const res = await request(app)
-//     .post('/api/summary/generate')
+//     .post('/api/plotpeek/generate')
 //     .send({
 //       name: 'We',
 //       author: 'Zamyatin',

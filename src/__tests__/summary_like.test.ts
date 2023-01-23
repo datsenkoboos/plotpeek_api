@@ -16,7 +16,7 @@ beforeAll(async () => {
       }
     ]
   })
-  const summary = await prisma.summary.create({
+  const plotpeek = await prisma.plotpeek.create({
     data: {
       name: 'The Witcher',
       author: 'Andjey S.',
@@ -26,28 +26,28 @@ beforeAll(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
-  id = summary.id
+  id = plotpeek.id
 })
 
 afterAll(async () => {
   await prisma.user.deleteMany()
-  await prisma.summary.deleteMany()
+  await prisma.plotpeek.deleteMany()
   await prisma.like.deleteMany()
   await prisma.$disconnect()
 })
 
 it('GET request should return 404', async () => {
-  const res = await request(app).get(`/api/summary/${id}/like`)
+  const res = await request(app).get(`/api/plotpeek/${id}/like`)
   expect(res.statusCode).toBe(404)
 })
 it('unauthorized request should return 401', async () => {
-  const res = await request(app).put(`/api/summary/${id}/like`)
+  const res = await request(app).put(`/api/plotpeek/${id}/like`)
   expect(res.statusCode).toBe(401)
 })
-it('request to not existing summary should return 404', async () => {
+it('request to not existing plotpeek should return 404', async () => {
   const login = await request(app).post('/api/login').send({
     username: 's1kebeats',
     password: 'Password1234'
@@ -64,11 +64,11 @@ it('valid request, should return 200 and add the like', async () => {
   })
   const accessToken = login.body.accessToken
 
-  const res = await request(app).put(`/api/summary/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
+  const res = await request(app).put(`/api/plotpeek/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
   expect(res.statusCode).toBe(200)
 
-  const summary = await request(app).get(`/api/summary/${id}`)
-  expect(summary.body._count.likes).toBe(1)
+  const plotpeek = await request(app).get(`/api/plotpeek/${id}`)
+  expect(plotpeek.body._count.likes).toBe(1)
 })
 it('valid request, should return 200 and remove the like', async () => {
   const login = await request(app).post('/api/login').send({
@@ -77,9 +77,9 @@ it('valid request, should return 200 and remove the like', async () => {
   })
   const accessToken = login.body.accessToken
 
-  const res = await request(app).put(`/api/summary/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
+  const res = await request(app).put(`/api/plotpeek/${id}/like`).set('Authorization', `Bearer ${accessToken}`)
   expect(res.statusCode).toBe(200)
 
-  const summary = await request(app).get(`/api/summary/${id}`)
-  expect(summary.body._count.likes).toBe(0)
+  const plotpeek = await request(app).get(`/api/plotpeek/${id}`)
+  expect(plotpeek.body._count.likes).toBe(0)
 })

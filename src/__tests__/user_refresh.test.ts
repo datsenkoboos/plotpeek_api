@@ -50,7 +50,7 @@ it('refresh with right refreshToken http-only cookie should return 200 and new v
   refreshTokenCookie = res.headers['set-cookie'][0].split(' ')[0]
 
   // request to a random endpoint with required authorization to check that new accessToken is valid
-  const edit = await request(app).post('/api/summary/create').set('Authorization', `Bearer ${res.body.accessToken}`)
+  const edit = await request(app).post('/api/plotpeek/create').set('Authorization', `Bearer ${res.body.accessToken}`)
   expect(edit.statusCode).toEqual(400)
 
   // checking that new refreshToken is valid

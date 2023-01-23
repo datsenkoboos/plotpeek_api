@@ -3,14 +3,16 @@
     "browser": true,
     "es2021": true
   },
-  "extends": "standard-with-typescript",
+  // "extends": "standard-with-typescript",
+  "extends": "google",
   "overrides": [],
   "parserOptions": {
-    "ecmaVersion": "ES6",
+    "ecmaVersion": 6,
     "sourceType": "module",
     "project": ["./tsconfig.json"]
-  },
-  "rules": {
-    "prefer-template": 2
   }
+  // ,
+  // "rules": {
+  //   "prefer-template": 2
+  // }
 }

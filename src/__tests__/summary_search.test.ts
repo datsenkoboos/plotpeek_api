@@ -15,7 +15,7 @@ beforeEach(async () => {
     }
   })
   userId = user.id
-  await prisma.summary.create({
+  await prisma.plotpeek.create({
     data: {
       name: 'The Diary of a Young Girl',
       author: 'Anne Frank',
@@ -25,10 +25,10 @@ beforeEach(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
-  await prisma.summary.create({
+  await prisma.plotpeek.create({
     data: {
       name: 'The Witcher',
       author: 'Andjey S.',
@@ -38,10 +38,10 @@ beforeEach(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
-  await prisma.summary.create({
+  await prisma.plotpeek.create({
     data: {
       name: 'witcher',
       author: 'Andjey S.',
@@ -51,10 +51,10 @@ beforeEach(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
-  await prisma.summary.create({
+  await prisma.plotpeek.create({
     data: {
       name: 'To Kill a Mockingbird',
       author: 'Harper Lee',
@@ -64,53 +64,53 @@ beforeEach(async () => {
           username: 's1kebeats'
         }
       },
-      content: 'The shortest summary'
+      content: 'The shortest plotpeek'
     }
   })
 })
 
 afterEach(async () => {
   await prisma.user.deleteMany()
-  await prisma.summary.deleteMany()
+  await prisma.plotpeek.deleteMany()
   await prisma.$disconnect()
 })
 
-it('valid request without query, should return 200 and all summaries (4)', async () => {
-  const res = await request(app).get('/api/summary/')
+it('valid request without query, should return 200 and all Plotpeeks (4)', async () => {
+  const res = await request(app).get('/api/plotpeek/')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(4)
+  expect(res.body.Plotpeeks.length).toBe(4)
 })
-it('valid request with filter by name: The Witcher, should return 200 and summaries with equal name (2)', async () => {
-  const res = await request(app).get('/api/summary/?name=witcher')
+it('valid request with filter by name: The Witcher, should return 200 and Plotpeeks with equal name (2)', async () => {
+  const res = await request(app).get('/api/plotpeek/?name=witcher')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(2)
+  expect(res.body.Plotpeeks.length).toBe(2)
 })
-it('valid request with filter by volume: 3, should return 200 and summaries with given volume (2)', async () => {
-  const res = await request(app).get('/api/summary/?volume=3')
+it('valid request with filter by volume: 3, should return 200 and Plotpeeks with given volume (2)', async () => {
+  const res = await request(app).get('/api/plotpeek/?volume=3')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(2)
+  expect(res.body.Plotpeeks.length).toBe(2)
 })
-it('valid request with filter by author: Anne Frank, should return 200 and summary with author containing text query (1)', async () => {
-  const res = await request(app).get('/api/summary/?author=anne+frank')
+it('valid request with filter by author: Anne Frank, should return 200 and plotpeek with author containing text query (1)', async () => {
+  const res = await request(app).get('/api/plotpeek/?author=anne+frank')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(1)
-  expect(res.body.summaries[0].name).toBe('The Diary of a Young Girl')
+  expect(res.body.Plotpeeks.length).toBe(1)
+  expect(res.body.Plotpeeks[0].name).toBe('The Diary of a Young Girl')
 })
-it('valid request with ordering by volumeHigher, should return 200, all summaries (4) and sort them by volume higher first', async () => {
-  const res = await request(app).get('/api/summary/?sort=volumeHigher')
+it('valid request with ordering by volumeHigher, should return 200, all Plotpeeks (4) and sort them by volume higher first', async () => {
+  const res = await request(app).get('/api/plotpeek/?sort=volumeHigher')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(4)
-  expect(res.body.summaries[0].name).toBe('To Kill a Mockingbird')
+  expect(res.body.Plotpeeks.length).toBe(4)
+  expect(res.body.Plotpeeks[0].name).toBe('To Kill a Mockingbird')
 })
-it('valid request with ordering by volumeLower, should return 200, all summaries (4) and sort them by volume lower first', async () => {
-  const res = await request(app).get('/api/summary/?sort=volumeLower')
+it('valid request with ordering by volumeLower, should return 200, all Plotpeeks (4) and sort them by volume lower first', async () => {
+  const res = await request(app).get('/api/plotpeek/?sort=volumeLower')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(4)
-  expect(res.body.summaries[0].name).toBe('The Diary of a Young Girl')
+  expect(res.body.Plotpeeks.length).toBe(4)
+  expect(res.body.Plotpeeks[0].name).toBe('The Diary of a Young Girl')
 })
-it("valid request with filter by both volume and name, should return 200 and summary with name containing 'witcher' and with volume = 3", async () => {
-  const res = await request(app).get('/api/summary/?name=witcher&volume=3')
+it("valid request with filter by both volume and name, should return 200 and plotpeek with name containing 'witcher' and with volume = 3", async () => {
+  const res = await request(app).get('/api/plotpeek/?name=witcher&volume=3')
   expect(res.statusCode).toBe(200)
-  expect(res.body.summaries.length).toBe(1)
-  expect(res.body.summaries[0].name).toBe('witcher')
+  expect(res.body.Plotpeeks.length).toBe(1)
+  expect(res.body.Plotpeeks[0].name).toBe('witcher')
 })

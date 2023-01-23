@@ -26,13 +26,13 @@ model User {
   activationLink String  @unique
   tokens         Token[]
 
-  summaries Summary[]
+  plotpeeks Plotpeek[]
   likes     Like[]
 
   createdAt DateTime @default(now())
 }
 
-model Summary {
+model Plotpeek {
   id          Int  @id @default(autoincrement())
   createdBy   User @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById Int
@@ -44,7 +44,6 @@ model Summary {
 
   description String?
   volume      Int
-  style       String?
 
   content String
 
@@ -57,10 +56,10 @@ model Like {
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
-  summary   Summary @relation(fields: [summaryId], references: [id], onDelete: Cascade)
-  summaryId Int
+  plotpeek   Plotpeek @relation(fields: [plotpeekId], references: [id], onDelete: Cascade)
+  plotpeekId Int
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, summaryId], name: "likeIdentifier")
+  @@unique([userId, plotpeekId], name: "likeIdentifier")
 }
