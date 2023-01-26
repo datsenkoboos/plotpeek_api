@@ -104,6 +104,18 @@ class UserController {
       next(error);
     }
   }
+
+  async checkUsername(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { username } = req.params;
+      const available = await userService.getUserByUsername(username);
+      return res.json({
+        available: !available,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new UserController();

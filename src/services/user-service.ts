@@ -131,6 +131,13 @@ class UserService {
     });
     return user;
   }
+
+  async getUserByUsername(username: string): Promise<PrismaClient.User | null> {
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
+    return user;
+  }
 }
 
 export default new UserService();

@@ -1,5 +1,5 @@
 import userController from "../controllers/user-controller";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { Router } from "express";
 import authMiddleware from "../middlewares/auth-middleware";
 import validationMiddleware from "../middlewares/validation-middleware";
@@ -40,5 +40,18 @@ router.get("/activate/:activationLink", userController.activate);
 
 // refresh tokens
 router.post("/refresh", userController.refresh);
+
+// check username availability
+router.get(
+  "/checkusername/:username",
+  param("username")
+    .notEmpty()
+    .bail()
+    // numbers and letters only
+    .matches(/^[0-9a-zA-Z]+$/)
+    .bail(),
+  validationMiddleware,
+  userController.checkUsername
+);
 
 export default router;
